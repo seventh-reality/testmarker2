@@ -10,4 +10,3 @@ public class ArPlatformApplication {
         SpringApplication.run(ArPlatformApplication.class, args);
     }
 }
-``
