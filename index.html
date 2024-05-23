@@ -3,22 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Web AR Platform</title>
+  <title>AR Platform</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/AR.js/aframe/build/aframe-ar.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/AR.js@3.3.2/aframe/build/aframe-ar.js"></script>
   <style>
     body { margin: 0; font-family: Arial, sans-serif; }
     .editor { position: absolute; top: 0; left: 0; width: 100%; height: 100vh; display: flex; flex-direction: column; }
-    .editor-panel { flex: 1; display: flex; }
-    .asset-panel, .scene-panel { flex: 1; padding: 10px; border: 1px solid #ccc; }
-    .scene-panel { flex: 2; }
     .toolbar { background: #333; color: #fff; padding: 10px; text-align: center; }
-    .asset-panel { overflow-y: auto; }
+    .editor-panel { display: flex; flex: 1; }
+    .asset-panel { flex: 1; padding: 10px; border-right: 1px solid #ccc; }
+    .scene-panel { flex: 2; padding: 10px; display: flex; justify-content: space-between; }
+    .scene-view { width: 48%; border: 1px solid #ccc; }
+    .asset-panel button { display: block; margin-bottom: 10px; width: 100%; }
   </style>
 </head>
 <body>
   <div class="editor">
-    <div class="toolbar">Web AR Platform</div>
+    <div class="toolbar">AR Platform</div>
     <div class="editor-panel">
       <div class="asset-panel">
         <h3>Assets</h3>
@@ -30,22 +31,24 @@
         <button onclick="animateSphere()">Animate Sphere</button>
         <h3>Scenes</h3>
         <button onclick="addScene()">Add Scene</button>
-        <h3>Download Assets</h3>
-        <button onclick="downloadAssets()">Download 3D Assets</button>
+        <h3>Download</h3>
+        <button onclick="downloadAssets()">Download Assets</button>
       </div>
       <div class="scene-panel">
-        <a-scene embedded arjs="sourceType: webcam;">
-          <a-marker preset="hiro">
-            <a-entity id="markerSceneContent"></a-entity>
-          </a-marker>
-          <a-entity camera></a-entity>
-        </a-scene>
-      </div>
-      <div class="scene-panel" id="surfaceScene">
-        <a-scene embedded arjs="sourceType: webcam; trackingMethod: best;">
-          <a-entity camera></a-entity>
-          <a-entity id="surfaceSceneContent"></a-entity>
-        </a-scene>
+        <div class="scene-view" id="markerScene">
+          <a-scene embedded arjs="sourceType: webcam;">
+            <a-marker preset="hiro">
+              <a-entity id="markerSceneContent"></a-entity>
+            </a-marker>
+            <a-entity camera></a-entity>
+          </a-scene>
+        </div>
+        <div class="scene-view" id="surfaceScene">
+          <a-scene embedded arjs="sourceType: webcam; trackingMethod: best;">
+            <a-entity camera></a-entity>
+            <a-entity id="surfaceSceneContent"></a-entity>
+          </a-scene>
+        </div>
       </div>
     </div>
   </div>
@@ -54,7 +57,7 @@
     function addBox() {
       const markerSceneContent = document.getElementById('markerSceneContent');
       const surfaceSceneContent = document.getElementById('surfaceSceneContent');
-      
+
       const boxMarker = document.createElement('a-box');
       boxMarker.setAttribute('position', '0 0.5 0');
       boxMarker.setAttribute('material', 'color: red');
