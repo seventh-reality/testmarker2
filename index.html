@@ -27,6 +27,7 @@
         <button onclick="addBox()">Add Box</button>
         <button onclick="addSphere()">Add Sphere</button>
         <button onclick="addModel()">Add 3D Model</button>
+        <button onclick="addSprite()">Add Sprite</button>
         <h3>Animations</h3>
         <button onclick="animateBox()">Animate Box</button>
         <button onclick="animateSphere()">Animate Sphere</button>
@@ -103,6 +104,21 @@
       surfaceSceneContent.appendChild(modelSurface);
     }
 
+    function addSprite() {
+      const markerSceneContent = document.getElementById('markerSceneContent');
+      const surfaceSceneContent = document.getElementById('surfaceSceneContent');
+
+      const spriteMarker = document.createElement('a-image');
+      spriteMarker.setAttribute('src', '#sprite');
+      spriteMarker.setAttribute('position', '0 0.5 0');
+      markerSceneContent.appendChild(spriteMarker);
+
+      const spriteSurface = document.createElement('a-image');
+      spriteSurface.setAttribute('src', '#sprite');
+      spriteSurface.setAttribute('position', '0 0.5 0');
+      surfaceSceneContent.appendChild(spriteSurface);
+    }
+
     function animateBox() {
       const markerSceneContent = document.getElementById('markerSceneContent');
       const surfaceSceneContent = document.getElementById('surfaceSceneContent');
@@ -139,9 +155,10 @@
       window.location.href = '/download-assets';
     }
   </script>
-  <!-- Add your 3D model URL here -->
+  <!-- Add your 3D model and sprite URL here -->
   <a-assets>
     <a-asset-item id="model" src="path/to/your/model.glb"></a-asset-item>
+    <img id="sprite" src="path/to/your/sprite.png">
   </a-assets>
 </body>
 </html>
