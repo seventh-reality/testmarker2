@@ -1,18 +1,13 @@
-const express = require('express');
-const app = express();
-const path = require('path');
+package com.example.arplatform;
 
-// Serve static files from the "public" directory
-app.use(express.static(path.join(__dirname, 'public')));
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-// Endpoint to download 3D assets
-app.get('/download-assets', (req, res) => {
-  const file = path.join(__dirname, 'public/assets/your-assets.zip');
-  res.download(file);
-});
+@SpringBootApplication
+public class ArPlatformApplication {
 
-// Start the server
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+    public static void main(String[] args) {
+        SpringApplication.run(ArPlatformApplication.class, args);
+    }
+}
+``
