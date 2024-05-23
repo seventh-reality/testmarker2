@@ -55,6 +55,8 @@
   </div>
 
   <script>
+    let selectedObject = null;
+
     function addBox() {
       const markerSceneContent = document.getElementById('markerSceneContent');
       const surfaceSceneContent = document.getElementById('surfaceSceneContent');
@@ -62,11 +64,15 @@
       const boxMarker = document.createElement('a-box');
       boxMarker.setAttribute('position', '0 0.5 0');
       boxMarker.setAttribute('material', 'color: red');
+      boxMarker.setAttribute('clickable', 'true');
+      boxMarker.addEventListener('click', () => selectObject(boxMarker));
       markerSceneContent.appendChild(boxMarker);
 
       const boxSurface = document.createElement('a-box');
       boxSurface.setAttribute('position', '0 0.5 0');
       boxSurface.setAttribute('material', 'color: red');
+      boxSurface.setAttribute('clickable', 'true');
+      boxSurface.addEventListener('click', () => selectObject(boxSurface));
       surfaceSceneContent.appendChild(boxSurface);
     }
 
@@ -78,12 +84,16 @@
       sphereMarker.setAttribute('position', '0 1 0');
       sphereMarker.setAttribute('radius', '0.5');
       sphereMarker.setAttribute('material', 'color: blue');
+      sphereMarker.setAttribute('clickable', 'true');
+      sphereMarker.addEventListener('click', () => selectObject(sphereMarker));
       markerSceneContent.appendChild(sphereMarker);
 
       const sphereSurface = document.createElement('a-sphere');
       sphereSurface.setAttribute('position', '0 1 0');
       sphereSurface.setAttribute('radius', '0.5');
       sphereSurface.setAttribute('material', 'color: blue');
+      sphereSurface.setAttribute('clickable', 'true');
+      sphereSurface.addEventListener('click', () => selectObject(sphereSurface));
       surfaceSceneContent.appendChild(sphereSurface);
     }
 
@@ -95,12 +105,16 @@
       modelMarker.setAttribute('gltf-model', '#model');
       modelMarker.setAttribute('position', '0 0 0');
       modelMarker.setAttribute('scale', '0.5 0.5 0.5');
+      modelMarker.setAttribute('clickable', 'true');
+      modelMarker.addEventListener('click', () => selectObject(modelMarker));
       markerSceneContent.appendChild(modelMarker);
 
       const modelSurface = document.createElement('a-entity');
       modelSurface.setAttribute('gltf-model', '#model');
       modelSurface.setAttribute('position', '0 0 0');
       modelSurface.setAttribute('scale', '0.5 0.5 0.5');
+      modelSurface.setAttribute('clickable', 'true');
+      modelSurface.addEventListener('click', () => selectObject(modelSurface));
       surfaceSceneContent.appendChild(modelSurface);
     }
 
@@ -111,48 +125,65 @@
       const spriteMarker = document.createElement('a-image');
       spriteMarker.setAttribute('src', '#sprite');
       spriteMarker.setAttribute('position', '0 0.5 0');
+      spriteMarker.setAttribute('clickable', 'true');
+      spriteMarker.addEventListener('click', () => selectObject(spriteMarker));
       markerSceneContent.appendChild(spriteMarker);
 
       const spriteSurface = document.createElement('a-image');
       spriteSurface.setAttribute('src', '#sprite');
       spriteSurface.setAttribute('position', '0 0.5 0');
+      spriteSurface.setAttribute('clickable', 'true');
+      spriteSurface.addEventListener('click', () => selectObject(spriteSurface));
       surfaceSceneContent.appendChild(spriteSurface);
     }
 
     function animateBox() {
-      const markerSceneContent = document.getElementById('markerSceneContent');
-      const surfaceSceneContent = document.getElementById('surfaceSceneContent');
-
-      const boxMarker = markerSceneContent.querySelector('a-box');
-      const boxSurface = surfaceSceneContent.querySelector('a-box');
-
-      if (boxMarker) {
-        boxMarker.setAttribute('animation', 'property: position; to: 0 2 0; loop: true; dur: 1000; dir: alternate');
-      }
-
-      if (boxSurface) {
-        boxSurface.setAttribute('animation', 'property: position; to: 0 2 0; loop: true; dur: 1000; dir: alternate');
+      if (selectedObject) {
+        selectedObject.setAttribute('animation', 'property: position; to: 0 2 0; loop: true; dur: 1000; dir: alternate');
       }
     }
 
     function animateSphere() {
-      const markerSceneContent = document.getElementById('markerSceneContent');
-      const surfaceSceneContent = document.getElementById('surfaceSceneContent');
-
-      const sphereMarker = markerSceneContent.querySelector('a-sphere');
-      const sphereSurface = surfaceSceneContent.querySelector('a-sphere');
-
-      if (sphereMarker) {
-        sphereMarker.setAttribute('animation', 'property: position; to: 0 2 0; loop: true; dur: 1000; dir: alternate');
-      }
-
-      if (sphereSurface) {
-        sphereSurface.setAttribute('animation', 'property: position; to: 0 2 0; loop: true; dur: 1000; dir: alternate');
+      if (selectedObject) {
+        selectedObject.setAttribute('animation', 'property: position; to: 0 2 0; loop: true; dur: 1000; dir: alternate');
       }
     }
 
     function downloadAssets() {
       window.location.href = '/download-assets';
+    }
+
+    function selectObject(object) {
+      if (selectedObject) {
+        selectedObject.setAttribute('material', 'opacity', '1');
+      }
+      selectedObject = object;
+      selectedObject.setAttribute('material', 'opacity', '0.6');
+      showInspector(selectedObject);
+    }
+
+    function showInspector(object) {
+      const inspector = document.getElementById('inspector');
+      inspector.style.display = 'block';
+      inspector.innerHTML = `
+        <h3>Inspector</h3>
+        <label>Position: <input type="text" id="position" value="${object.getAttribute('position')}"></label>
+        <label>Rotation: <input type="text" id="rotation" value="${object.getAttribute('rotation')}"></label>
+        <label>Scale: <input type="text" id="scale" value="${object.getAttribute('scale')}"></label>
+        <button onclick="updateObject()">Update</button>
+      `;
+    }
+
+    function updateObject() {
+      const position = document.getElementById('position').value;
+      const rotation = document.getElementById('rotation').value;
+      const scale = document.getElementById('scale').value;
+
+      if (selectedObject) {
+        selectedObject.setAttribute('position', position);
+        selectedObject.setAttribute('rotation', rotation);
+        selectedObject.setAttribute('scale', scale);
+      }
     }
   </script>
   <!-- Add your 3D model and sprite URL here -->
@@ -160,5 +191,6 @@
     <a-asset-item id="model" src="path/to/your/model.glb"></a-asset-item>
     <img id="sprite" src="path/to/your/sprite.png">
   </a-assets>
+  <div id="inspector" style="display: none;"></div>
 </body>
 </html>
