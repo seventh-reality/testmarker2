@@ -23,6 +23,7 @@
         <h3>Assets</h3>
         <button onclick="addBox()">Add Box</button>
         <button onclick="addSphere()">Add Sphere</button>
+        <button onclick="addModel()">Add 3D Model</button>
       </div>
       <div class="scene-panel">
         <a-scene embedded arjs>
@@ -52,6 +53,19 @@
       sphere.setAttribute('material', 'color: blue');
       sceneContent.appendChild(sphere);
     }
+
+    function addModel() {
+      const sceneContent = document.getElementById('sceneContent');
+      const model = document.createElement('a-entity');
+      model.setAttribute('gltf-model', '#model');
+      model.setAttribute('position', '0 0 0');
+      model.setAttribute('scale', '0.5 0.5 0.5');
+      sceneContent.appendChild(model);
+    }
   </script>
+  <!-- Add your 3D model URL here -->
+  <a-assets>
+    <a-asset-item id="model" src="path/to/your/model.glb"></a-asset-item>
+  </a-assets>
 </body>
 </html>
