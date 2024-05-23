@@ -7,7 +7,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Endpoint to download 3D assets
 app.get('/download-assets', (req, res) => {
-  const file = path.join(__dirname, 'path/to/your/assets.zip');
+  const file = path.join(__dirname, 'public/assets/your-assets.zip');
   res.download(file);
 });
 
