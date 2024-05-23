@@ -13,6 +13,7 @@
     .asset-panel, .scene-panel { flex: 1; padding: 10px; border: 1px solid #ccc; }
     .scene-panel { flex: 2; }
     .toolbar { background: #333; color: #fff; padding: 10px; text-align: center; }
+    .asset-panel { overflow-y: auto; }
   </style>
 </head>
 <body>
@@ -24,6 +25,8 @@
         <button onclick="addBox()">Add Box</button>
         <button onclick="addSphere()">Add Sphere</button>
         <button onclick="addModel()">Add 3D Model</button>
+        <h3>Download Assets</h3>
+        <button onclick="downloadAssets()">Download 3D Assets</button>
       </div>
       <div class="scene-panel">
         <a-scene embedded arjs="sourceType: webcam;">
@@ -90,6 +93,10 @@
       modelSurface.setAttribute('position', '0 0 0');
       modelSurface.setAttribute('scale', '0.5 0.5 0.5');
       surfaceSceneContent.appendChild(modelSurface);
+    }
+
+    function downloadAssets() {
+      window.location.href = '/download-assets';
     }
   </script>
   <!-- Add your 3D model URL here -->
