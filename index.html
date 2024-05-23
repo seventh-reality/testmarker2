@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Web AR Platform</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/AR.js@3.3.2/aframe/build/aframe-ar.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/AR.js/aframe/build/aframe-ar.js"></script>
   <style>
     body { margin: 0; font-family: Arial, sans-serif; }
     .editor { position: absolute; top: 0; left: 0; width: 100%; height: 100vh; display: flex; flex-direction: column; }
@@ -25,6 +25,11 @@
         <button onclick="addBox()">Add Box</button>
         <button onclick="addSphere()">Add Sphere</button>
         <button onclick="addModel()">Add 3D Model</button>
+        <h3>Animations</h3>
+        <button onclick="animateBox()">Animate Box</button>
+        <button onclick="animateSphere()">Animate Sphere</button>
+        <h3>Scenes</h3>
+        <button onclick="addScene()">Add Scene</button>
         <h3>Download Assets</h3>
         <button onclick="downloadAssets()">Download 3D Assets</button>
       </div>
@@ -93,6 +98,49 @@
       modelSurface.setAttribute('position', '0 0 0');
       modelSurface.setAttribute('scale', '0.5 0.5 0.5');
       surfaceSceneContent.appendChild(modelSurface);
+    }
+
+    function animateBox() {
+      const markerSceneContent = document.getElementById('markerSceneContent');
+      const surfaceSceneContent = document.getElementById('surfaceSceneContent');
+
+      const boxMarker = markerSceneContent.querySelector('a-box');
+      const boxSurface = surfaceSceneContent.querySelector('a-box');
+
+      if (boxMarker) {
+        boxMarker.setAttribute('animation', 'property: position; to: 0 2 0; loop: true; dur: 1000; dir: alternate');
+      }
+
+      if (boxSurface) {
+        boxSurface.setAttribute('animation', 'property: position; to: 0 2 0; loop: true; dur: 1000; dir: alternate');
+      }
+    }
+
+    function animateSphere() {
+      const markerSceneContent = document.getElementById('markerSceneContent');
+      const surfaceSceneContent = document.getElementById('surfaceSceneContent');
+
+      const sphereMarker = markerSceneContent.querySelector('a-sphere');
+      const sphereSurface = surfaceSceneContent.querySelector('a-sphere');
+
+      if (sphereMarker) {
+        sphereMarker.setAttribute('animation', 'property: position; to: 0 2 0; loop: true; dur: 1000; dir: alternate');
+      }
+
+      if (sphereSurface) {
+        sphereSurface.setAttribute('animation', 'property: position; to: 0 2 0; loop: true; dur: 1000; dir: alternate');
+      }
+    }
+
+    function addScene() {
+      const surfaceSceneContent = document.getElementById('surfaceSceneContent');
+
+      const newScene = document.createElement('a-entity');
+      newScene.setAttribute('geometry', 'primitive: plane; height: 4; width: 4');
+      newScene.setAttribute('material', 'color: green');
+      newScene.setAttribute('position', '0 0 -2');
+
+      surfaceSceneContent.appendChild(newScene);
     }
 
     function downloadAssets() {
