@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Web AR Platform</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/AR.js/aframe/build/aframe-ar.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/AR.js@3.3.2/aframe/build/aframe-ar.js"></script>
   <style>
     body { margin: 0; font-family: Arial, sans-serif; }
     .editor { position: absolute; top: 0; left: 0; width: 100%; height: 100vh; display: flex; flex-direction: column; }
@@ -26,11 +26,17 @@
         <button onclick="addModel()">Add 3D Model</button>
       </div>
       <div class="scene-panel">
-        <a-scene embedded arjs>
+        <a-scene embedded arjs="sourceType: webcam;">
           <a-marker preset="hiro">
-            <a-entity id="sceneContent"></a-entity>
+            <a-entity id="markerSceneContent"></a-entity>
           </a-marker>
           <a-entity camera></a-entity>
+        </a-scene>
+      </div>
+      <div class="scene-panel" id="surfaceScene">
+        <a-scene embedded arjs="sourceType: webcam; trackingMethod: best;">
+          <a-entity camera></a-entity>
+          <a-entity id="surfaceSceneContent"></a-entity>
         </a-scene>
       </div>
     </div>
@@ -38,29 +44,52 @@
 
   <script>
     function addBox() {
-      const sceneContent = document.getElementById('sceneContent');
-      const box = document.createElement('a-box');
-      box.setAttribute('position', '0 0.5 0');
-      box.setAttribute('material', 'color: red');
-      sceneContent.appendChild(box);
+      const markerSceneContent = document.getElementById('markerSceneContent');
+      const surfaceSceneContent = document.getElementById('surfaceSceneContent');
+      
+      const boxMarker = document.createElement('a-box');
+      boxMarker.setAttribute('position', '0 0.5 0');
+      boxMarker.setAttribute('material', 'color: red');
+      markerSceneContent.appendChild(boxMarker);
+
+      const boxSurface = document.createElement('a-box');
+      boxSurface.setAttribute('position', '0 0.5 0');
+      boxSurface.setAttribute('material', 'color: red');
+      surfaceSceneContent.appendChild(boxSurface);
     }
 
     function addSphere() {
-      const sceneContent = document.getElementById('sceneContent');
-      const sphere = document.createElement('a-sphere');
-      sphere.setAttribute('position', '0 1 0');
-      sphere.setAttribute('radius', '0.5');
-      sphere.setAttribute('material', 'color: blue');
-      sceneContent.appendChild(sphere);
+      const markerSceneContent = document.getElementById('markerSceneContent');
+      const surfaceSceneContent = document.getElementById('surfaceSceneContent');
+
+      const sphereMarker = document.createElement('a-sphere');
+      sphereMarker.setAttribute('position', '0 1 0');
+      sphereMarker.setAttribute('radius', '0.5');
+      sphereMarker.setAttribute('material', 'color: blue');
+      markerSceneContent.appendChild(sphereMarker);
+
+      const sphereSurface = document.createElement('a-sphere');
+      sphereSurface.setAttribute('position', '0 1 0');
+      sphereSurface.setAttribute('radius', '0.5');
+      sphereSurface.setAttribute('material', 'color: blue');
+      surfaceSceneContent.appendChild(sphereSurface);
     }
 
     function addModel() {
-      const sceneContent = document.getElementById('sceneContent');
-      const model = document.createElement('a-entity');
-      model.setAttribute('gltf-model', '#model');
-      model.setAttribute('position', '0 0 0');
-      model.setAttribute('scale', '0.5 0.5 0.5');
-      sceneContent.appendChild(model);
+      const markerSceneContent = document.getElementById('markerSceneContent');
+      const surfaceSceneContent = document.getElementById('surfaceSceneContent');
+
+      const modelMarker = document.createElement('a-entity');
+      modelMarker.setAttribute('gltf-model', '#model');
+      modelMarker.setAttribute('position', '0 0 0');
+      modelMarker.setAttribute('scale', '0.5 0.5 0.5');
+      markerSceneContent.appendChild(modelMarker);
+
+      const modelSurface = document.createElement('a-entity');
+      modelSurface.setAttribute('gltf-model', '#model');
+      modelSurface.setAttribute('position', '0 0 0');
+      modelSurface.setAttribute('scale', '0.5 0.5 0.5');
+      surfaceSceneContent.appendChild(modelSurface);
     }
   </script>
   <!-- Add your 3D model URL here -->
