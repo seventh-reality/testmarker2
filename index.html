@@ -3,24 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AR Example</title>
+  <title>Web AR Platform</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/AR.js/aframe/build/aframe-ar.js"></script>
   <style>
-    body { margin: 0; }
-    .ar-container { width: 100%; height: 100vh; }
+    body { margin: 0; font-family: Arial, sans-serif; }
+    .editor { position: absolute; top: 0; left: 0; width: 100%; height: 100vh; display: flex; flex-direction: column; }
+    .editor-panel { flex: 1; display: flex; }
+    .asset-panel, .scene-panel { flex: 1; padding: 10px; border: 1px solid #ccc; }
+    .scene-panel { flex: 2; }
+    .toolbar { background: #333; color: #fff; padding: 10px; text-align: center; }
   </style>
 </head>
 <body>
-  <div class="ar-container">
-    <a-scene embedded arjs>
-      <!-- AR Marker -->
-      <a-marker preset="hiro">
-        <!-- 3D Model (A simple box) -->
-        <a-box position="0 0.5 0" material="color: red;"></a-box>
-      </a-marker>
-      <a-entity camera></a-entity>
-    </a-scene>
+  <div class="editor">
+    <div class="toolbar">Web AR Platform</div>
+    <div class="editor-panel">
+      <div class="asset-panel">
+        <h3>Assets</h3>
+        <button onclick="addBox()">Add Box</button>
+        <button onclick="addSphere()">Add Sphere</button>
+      </div>
+      <div class="scene-panel">
+        <a-scene embedded arjs>
+          <a-marker preset="hiro">
+            <a-entity id="sceneContent"></a-entity>
+          </a-marker>
+          <a-entity camera></a-entity>
+        </a-scene>
+      </div>
+    </div>
   </div>
+
+  <script>
+    function addBox() {
+      const sceneContent = document.getElementById('sceneContent');
+      const box = document.createElement('a-box');
+      box.setAttribute('position', '0 0.5 0');
+      box.setAttribute('material', 'color: red');
+      sceneContent.appendChild(box);
+    }
+
+    function addSphere() {
+      const sceneContent = document.getElementById('sceneContent');
+      const sphere = document.createElement('a-sphere');
+      sphere.setAttribute('position', '0 1 0');
+      sphere.setAttribute('radius', '0.5');
+      sphere.setAttribute('material', 'color: blue');
+      sceneContent.appendChild(sphere);
+    }
+  </script>
 </body>
 </html>
