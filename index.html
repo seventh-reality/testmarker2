@@ -6,58 +6,46 @@
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <style>
-        #buttons, #scenes {
+        #ui-container {
             position: absolute;
             top: 10px;
             left: 10px;
             z-index: 100;
         }
-        .ar-button, .scene-button {
+        .ui-button {
             padding: 10px 20px;
             margin: 5px;
             background-color: #fff;
             border: 1px solid #000;
             cursor: pointer;
         }
-        .ar-view {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 50;
-            background-color: #fff;
-            padding: 10px 20px;
-            border: 1px solid #000;
-        }
     </style>
 </head>
 <body>
-    <div id="scenes"></div>
-    <div id="buttons">
-        <div class="ar-button" id="arViewButton">AR View</div>
+    <div id="ui-container">
+        <div class="ui-button" id="arViewButton">Toggle AR View</div>
     </div>
     <div id="arContainer" style="display: none;">
         <a-scene embedded arjs>
-            <!-- Assets and scene objects will be injected here -->
+            <!-- Dynamic scene elements will be added here -->
+        </a-scene>
+    </div>
+    <div id="3dContainer">
+        <a-scene>
+            <a-box position="0 1 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+            <a-sphere position="2 1 -3" radius="1.25" color="#EF2D5E"></a-sphere>
+            <a-cylinder position="-2 1 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
+            <a-plane position="0 0 -4" rotation="-90 0 0" width="10" height="10" color="#7BC8A4"></a-plane>
+            <a-sky color="#ECECEC"></a-sky>
         </a-scene>
     </div>
     <script>
-        const scenes = ['scene1', 'scene2'];  // Add more scene IDs as needed
-        const sceneContainer = document.getElementById('scenes');
         const arViewButton = document.getElementById('arViewButton');
         const arContainer = document.getElementById('arContainer');
-        const sceneElement = document.querySelector('a-scene');
+        const threeDContainer = document.getElementById('3dContainer');
+        const sceneElement = document.querySelector('#arContainer a-scene');
 
-        // Load scenes buttons
-        scenes.forEach(sceneId => {
-            let sceneButton = document.createElement('div');
-            sceneButton.className = 'scene-button';
-            sceneButton.textContent = `Load ${sceneId}`;
-            sceneButton.addEventListener('click', () => loadScene(sceneId));
-            sceneContainer.appendChild(sceneButton);
-        });
-
-        // Function to load a scene
+        // Fetch and load a scene
         function loadScene(sceneId) {
             fetch(`/scenes/${sceneId}`)
                 .then(response => response.json())
@@ -71,7 +59,7 @@
                     config.objects.forEach(obj => {
                         let entity = document.createElement('a-entity');
                         if (obj.type === 'image-target') {
-                            entity.setAttribute('artoolkit', 'sourceType: image; sourceUrl: ' + obj.src);
+                            entity.setAttribute('artoolkit', `sourceType: image; sourceUrl: ${obj.src}`);
                         } else if (obj.type === 'surface') {
                             entity.setAttribute('gltf-model', obj.model);
                             entity.setAttribute('position', obj.position);
@@ -81,22 +69,17 @@
                     });
 
                     // Add buttons to the UI
-                    const buttonsDiv = document.getElementById('buttons');
-                    while (buttonsDiv.firstChild) {
-                        buttonsDiv.removeChild(buttonsDiv.firstChild);
-                    }
-                    buttonsDiv.appendChild(arViewButton);
-
+                    const uiContainer = document.getElementById('ui-container');
                     config.buttons.forEach(button => {
                         let btn = document.createElement('div');
-                        btn.className = 'ar-button';
+                        btn.className = 'ui-button';
                         btn.textContent = button.label;
                         btn.addEventListener('click', () => {
                             if (button.action === 'startAnimation') {
                                 startAnimation();
                             }
                         });
-                        buttonsDiv.appendChild(btn);
+                        uiContainer.appendChild(btn);
                     });
                 });
         }
@@ -114,7 +97,19 @@
 
         // Toggle AR view
         arViewButton.addEventListener('click', () => {
-            arContainer.style.display = arContainer.style.display === 'none' ? 'block' : 'none';
+            if (arContainer.style.display === 'none') {
+                arContainer.style.display = 'block';
+                threeDContainer.style.display = 'none';
+                loadScene('scene1'); // Load a default scene
+            } else {
+                arContainer.style.display = 'none';
+                threeDContainer.style.display = 'block';
+            }
+        });
+
+        // Initial 3D view
+        document.addEventListener('DOMContentLoaded', () => {
+            loadScene('scene1'); // Load a default scene initially
         });
     </script>
 </body>
