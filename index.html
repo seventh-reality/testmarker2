@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D View & AR Platform</title>
+    <title>3D Web View Platform</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <script src="./scripts/app.js" defer></script>
-    <script src="./scripts/ar.js" defer></script>
     <style>
         body { margin: 0; }
         canvas { display: block; }
+        #ui { position: absolute; top: 10px; left: 10px; }
     </style>
 </head>
 <body>
-    <input type="file" id="fileInput" accept=".glb, .gltf, .png" />
-    <button id="uploadButton">Upload</button>
-    <button id="arViewButton">AR View</button>
+    <div id="ui">
+        <input type="file" id="fileInput" accept=".glb, .gltf, .png" />
+        <button id="uploadButton">Upload</button>
+    </div>
     <div id="container"></div>
 </body>
 </html>
