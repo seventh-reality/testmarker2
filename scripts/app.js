@@ -12,6 +12,7 @@ document.getElementById('uploadButton').addEventListener('click', () => {
         .then(response => response.text())
         .then(message => {
             console.log(message);
+            loadModel(`/uploads/models/${file.name}`);
         })
         .catch(error => {
             console.error('Error:', error);
@@ -19,5 +20,34 @@ document.getElementById('uploadButton').addEventListener('click', () => {
     }
 });
 
-// 3D rendering logic using Three.js
-// Add your Three.js code here
+// Set up Three.js scene
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.getElementById('container').appendChild(renderer.domElement);
+
+// Add light to the scene
+const light = new THREE.DirectionalLight(0xffffff, 1);
+light.position.set(1, 1, 1).normalize();
+scene.add(light);
+
+// Function to load 3D model
+function loadModel(url) {
+    const loader = new THREE.GLTFLoader();
+    loader.load(url, function(gltf) {
+        scene.add(gltf.scene);
+    }, undefined, function(error) {
+        console.error(error);
+    });
+}
+
+// Render loop
+function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+}
+animate();
+
+// Initial camera position
+camera.position.z = 5;
