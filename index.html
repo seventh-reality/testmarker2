@@ -6,62 +6,102 @@
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <style>
-        #buttons {
+        #buttons, #scenes {
             position: absolute;
             top: 10px;
             left: 10px;
             z-index: 100;
         }
-        .ar-button {
+        .ar-button, .scene-button {
             padding: 10px 20px;
             margin: 5px;
             background-color: #fff;
             border: 1px solid #000;
             cursor: pointer;
         }
+        .ar-view {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 50;
+            background-color: #fff;
+            padding: 10px 20px;
+            border: 1px solid #000;
+        }
     </style>
 </head>
 <body>
-    <div id="buttons"></div>
-    <a-scene embedded arjs>
-        <!-- Assets and scene objects will be injected here -->
-    </a-scene>
+    <div id="scenes"></div>
+    <div id="buttons">
+        <div class="ar-button" id="arViewButton">AR View</div>
+    </div>
+    <div id="arContainer" style="display: none;">
+        <a-scene embedded arjs>
+            <!-- Assets and scene objects will be injected here -->
+        </a-scene>
+    </div>
     <script>
-        // Load scene configuration from server
-        fetch('/scenes/scene1')
-            .then(response => response.json())
-            .then(config => {
-                const scene = document.querySelector('a-scene');
-                
-                // Add objects to the scene
-                config.objects.forEach(obj => {
-                    let entity = document.createElement('a-entity');
-                    if (obj.type === 'image-target') {
-                        entity.setAttribute('artoolkit', 'sourceType: image; sourceUrl: ' + obj.src);
-                    } else if (obj.type === 'surface') {
-                        entity.setAttribute('gltf-model', obj.model);
-                        entity.setAttribute('position', obj.position);
-                        entity.setAttribute('scale', obj.scale);
-                    }
-                    scene.appendChild(entity);
-                });
-                
-                // Add buttons to the UI
-                const buttonsDiv = document.getElementById('buttons');
-                config.buttons.forEach(button => {
-                    let btn = document.createElement('div');
-                    btn.className = 'ar-button';
-                    btn.textContent = button.label;
-                    btn.addEventListener('click', () => {
-                        if (button.action === 'startAnimation') {
-                            startAnimation();
-                        }
-                    });
-                    buttonsDiv.appendChild(btn);
-                });
-            });
+        const scenes = ['scene1', 'scene2'];  // Add more scene IDs as needed
+        const sceneContainer = document.getElementById('scenes');
+        const arViewButton = document.getElementById('arViewButton');
+        const arContainer = document.getElementById('arContainer');
+        const sceneElement = document.querySelector('a-scene');
 
-        // Example function to start an animation
+        // Load scenes buttons
+        scenes.forEach(sceneId => {
+            let sceneButton = document.createElement('div');
+            sceneButton.className = 'scene-button';
+            sceneButton.textContent = `Load ${sceneId}`;
+            sceneButton.addEventListener('click', () => loadScene(sceneId));
+            sceneContainer.appendChild(sceneButton);
+        });
+
+        // Function to load a scene
+        function loadScene(sceneId) {
+            fetch(`/scenes/${sceneId}`)
+                .then(response => response.json())
+                .then(config => {
+                    // Clear existing objects
+                    while (sceneElement.firstChild) {
+                        sceneElement.removeChild(sceneElement.firstChild);
+                    }
+
+                    // Add objects to the scene
+                    config.objects.forEach(obj => {
+                        let entity = document.createElement('a-entity');
+                        if (obj.type === 'image-target') {
+                            entity.setAttribute('artoolkit', 'sourceType: image; sourceUrl: ' + obj.src);
+                        } else if (obj.type === 'surface') {
+                            entity.setAttribute('gltf-model', obj.model);
+                            entity.setAttribute('position', obj.position);
+                            entity.setAttribute('scale', obj.scale);
+                        }
+                        sceneElement.appendChild(entity);
+                    });
+
+                    // Add buttons to the UI
+                    const buttonsDiv = document.getElementById('buttons');
+                    while (buttonsDiv.firstChild) {
+                        buttonsDiv.removeChild(buttonsDiv.firstChild);
+                    }
+                    buttonsDiv.appendChild(arViewButton);
+
+                    config.buttons.forEach(button => {
+                        let btn = document.createElement('div');
+                        btn.className = 'ar-button';
+                        btn.textContent = button.label;
+                        btn.addEventListener('click', () => {
+                            if (button.action === 'startAnimation') {
+                                startAnimation();
+                            }
+                        });
+                        buttonsDiv.appendChild(btn);
+                    });
+                });
+        }
+
+        // Function to start an animation
         function startAnimation() {
             let model = document.querySelector('[gltf-model]');
             model.setAttribute('animation', {
@@ -71,6 +111,11 @@
                 dur: 2000
             });
         }
+
+        // Toggle AR view
+        arViewButton.addEventListener('click', () => {
+            arContainer.style.display = arContainer.style.display === 'none' ? 'block' : 'none';
+        });
     </script>
 </body>
 </html>
