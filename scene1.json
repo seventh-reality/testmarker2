@@ -1,0 +1,22 @@
+{
+    "objects": [
+        {
+            "type": "image-target",
+            "src": "path/to/your/image-target.jpg",
+            "position": "0 0 0",
+            "scale": "1 1 1"
+        },
+        {
+            "type": "surface",
+            "model": "path/to/your/model.gltf",
+            "position": "0 0 -5",
+            "scale": "1 1 1"
+        }
+    ],
+    "buttons": [
+        {
+            "label": "Start Animation",
+            "action": "startAnimation"
+        }
+    ]
+}
