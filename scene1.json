@@ -2,13 +2,13 @@
     "objects": [
         {
             "type": "image-target",
-            "src": "path/to/your/image-target.jpg",
+            "src": "/assets/images/image-target.jpg",
             "position": "0 0 0",
             "scale": "1 1 1"
         },
         {
             "type": "surface",
-            "model": "path/to/your/model.gltf",
+            "model": "/assets/models/model.gltf",
             "position": "0 0 -5",
             "scale": "1 1 1"
         }
