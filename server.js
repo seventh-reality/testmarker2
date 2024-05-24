@@ -7,7 +7,7 @@ const port = 3000;
 // Set up storage for Multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    if (file.mimetype === 'model/gltf+json' || file.mimetype === 'model/gltf-binary') {
+    if (file.mimetype.includes('model')) {
       cb(null, 'public/uploads/models/');
     } else {
       cb(null, 'public/uploads/textures/');
