@@ -1,25 +1,29 @@
 const express = require('express');
-const multer  = require('multer');
+const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
 const app = express();
 const port = 3000;
 
-// Multer storage configuration
+// Set up storage for Multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/uploads/')
+    if (file.mimetype === 'model/gltf+json' || file.mimetype === 'model/gltf-binary') {
+      cb(null, 'public/uploads/models/');
+    } else {
+      cb(null, 'public/uploads/textures/');
+    }
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname)
+    cb(null, file.originalname);
   }
-})
-const upload = multer({ storage: storage })
+});
+
+const upload = multer({ storage: storage });
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Endpoint for uploading 3D models and PNG images
+// Endpoint for uploading files
 app.post('/upload', upload.single('file'), (req, res) => {
   res.send('File uploaded successfully');
 });
